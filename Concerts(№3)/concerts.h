@@ -1,6 +1,9 @@
 #pragma once
+
 #include <iostream>
 #include <fstream>
+#include <Windows.h>
+
 #define SIZE 128
 
 struct concert
@@ -87,8 +90,10 @@ public:
 
 	int get_concert_amount();
 	concert& operator[](int index);
-	void append();
+	void append(const char *name, unsigned int capacity, unsigned int left, const char *date);
+	void append(concert &c);
 	void book_ticket(int index);
 
+	friend std::istream& operator>>(std::istream& in, concerts_list& l1);
 	friend std::ostream& operator<<(std::ostream& out, const concerts_list& l1);
 };
