@@ -2,11 +2,16 @@
 
 #include <iostream>
 #include <fstream>
-#include <Windows.h>
 #include <conio.h>
+#include <Windows.h>
+#include <algorithm>
 
 #define SIZE 128
 #define MAX 50
+
+void menu();
+int comp_name(const void* concert1, const void* concert2);
+int comp_date(const void* concert1, const void* concert2);
 
 struct concert
 {
@@ -36,14 +41,14 @@ public:
 		std::ifstream f1(file);
 
 		if (!f1.is_open())
-			throw "Error! Can't open file.";
+			throw std::exception("Error! Can't open file.");
 
-		list_ = new concert[count_];
+		list_ = new concert[MAX];
 
 		while (f1.getline(buf, SIZE))
 		{
 			if (count_ == MAX)
-				throw "Error! Too many members in your list";
+				throw std::exception("Error! Too many members in your list");
 
 			char *ptr, *ptr1;
 			char *t = strtok_s(buf, ";", &ptr);
@@ -67,7 +72,7 @@ public:
 		count_ = l1.count_;
 		list_ = new concert[count_];
 
-		for (int i = 0; i < count_; i++)
+		for (auto i = 0; i < count_; i++)
 		{
 			strcpy_s(list_[i].name, SIZE, l1.list_[i].name);
 			list_[i].capacity = l1.list_[i].capacity;
@@ -76,7 +81,7 @@ public:
 		}
 	}
 
-	concerts_list(concerts_list&& l1)
+	concerts_list(concerts_list&& l1) noexcept
 	{
 		count_ = l1.count_;
 		list_ = l1.list_;
@@ -87,10 +92,11 @@ public:
 		delete[] list_;
 	}
 
-	int get_concert_amount();
-	concert& operator[](int index);
+	int get_concert_amount() const;
+	concert& operator[](const int index) const;
+	void append(const char* name, const unsigned capacity, const unsigned left, const char* date);
 	void append(concert &c);
-	void book_ticket(int index);
+	void book_ticket(const int index) const;
 	void in_file(const char* file);
 	void sort_by_name() const;
 	void sort_by_date() const;
@@ -98,6 +104,3 @@ public:
 	friend std::istream& operator>>(std::istream& in, concerts_list& l1);
 	friend std::ostream& operator<<(std::ostream& out, const concerts_list& l1);
 };
-
-int comp_name(const void* concert1, const void* concert2);
-int comp_date(const void* concert1, const void* concert2);

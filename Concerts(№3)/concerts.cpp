@@ -1,18 +1,18 @@
 #include "concerts.h"
 
-std::ostream& operator<< (std::ostream& out, concerts_list const& list1)
+std::ostream& operator<<(std::ostream& out, const concerts_list& l1)
 {
-	for (int i = 0; i < list1.count_; i++)
-		out << list1.list_[i].name << ";" << list1.list_[i].capacity << ";" << list1.list_[i].left << ";" << list1.list_[i].date << std::endl;
+	for (auto i = 0; i < l1.count_; i++)
+		out << l1.list_[i].name << ": " << l1.list_[i].capacity << "; " << l1.list_[i].left << "; " << l1.list_[i].date << std::endl;
 
 	return out;
 }
 
-std::istream& operator>> (std::istream& in, concerts_list& l1)
+std::istream& operator>>(std::istream& in, concerts_list& l1)
 {
 	concert c;
 	char s = 'c';
-	while (s == 'c')
+	while (s != 'q')
 	{
 		std::cout << "Enter the name of the concert: ";
 		in.getline(c.name, SIZE);
@@ -26,7 +26,7 @@ std::istream& operator>> (std::istream& in, concerts_list& l1)
 
 		l1.append(c);
 
-		std::cout << "Press 'q' to quit or 'c' to continue ";
+		std::cout << "Press 'q' to quit or something else to continue ";
 		in >> s;
 		in.ignore();
 	}
@@ -37,7 +37,9 @@ std::istream& operator>> (std::istream& in, concerts_list& l1)
 void concerts_list::append(concert& c)
 {
 	if (count_ == MAX)
-		throw "Error! Too many members in your list";
+		throw std::exception("Error! Too many members in your list");
+
+	count_++;
 
 	list_[count_ - 1].capacity = c.capacity;
 	list_[count_ - 1].left = c.left;
@@ -46,24 +48,24 @@ void concerts_list::append(concert& c)
 }
 
 
-int concerts_list::get_concert_amount()
+int concerts_list::get_concert_amount() const
 {
 	return count_;
 }
 
-concert& concerts_list::operator[](int index)
+concert& concerts_list::operator[](const int index) const
 {
 	if (index >= count_ || index < 0)
-		throw "Error! The index is not included in the values area ";
+		throw std::exception("Error! The index is not included in the values area ");
 
 	return list_[index];
 }
 
-void concerts_list::book_ticket(int index)
+void concerts_list::book_ticket(const int index) const
 {
 	if (list_[index].left == 0)
-		throw "Sorry, no more tickets left";
-	else
+		throw std::exception("Sorry, no more tickets left");
+	else 
 		list_[index].left--;
 }
 
@@ -73,7 +75,7 @@ void concerts_list::in_file(const char* file)
 
 	if (!f.is_open())
 	{
-		throw "Error! Can't open the file";
+		throw std::exception("Error! Can't open the file");
 	}
 
 	for (int i = 0; i < count_; i++)
@@ -103,4 +105,16 @@ void concerts_list::sort_by_name() const
 void concerts_list::sort_by_date() const
 {
 	qsort(list_, count_, sizeof(concert), comp_date);
+}
+
+void menu()
+{
+	std::cout << "1. Show your list" << std::endl;
+	std::cout << "2. Add new concert" << std::endl;
+	std::cout << "3. Book a ticket" << std::endl;
+	std::cout << "4. Amount of concerts" << std::endl;
+	std::cout << "5. Sort by name" << std::endl;
+	std::cout << "6. Sort by date" << std::endl;
+	std::cout << "7. Info" << std::endl;
+	std::cout << "8. Exit" << std::endl;
 }

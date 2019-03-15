@@ -1,6 +1,4 @@
-﻿#include "concerts.h"
-
-void DisplayMenu(concerts_list list1);
+#include "concerts.h"
 
 int main()
 {
@@ -9,74 +7,71 @@ int main()
 
 	int choice = 0;
 
-	try
+	try 
 	{
-		concerts_list list_1("shl.csv");
+		concerts_list l("shl.csv");
 
-		while (choice != 6)
+		while (choice != 8)
 		{
-			DisplayMenu(list_1);
+			menu();
 			choice = _getch() - 48;
 			system("cls");
-
 			switch (choice)
 			{
 			case 1:
-				std::cout << list_1;
-				std::cout << std::endl << "Press any key to return to menu";
+				std::cout << l;
+				std::cout << std::endl << std::endl << "Press any key to return to the menu";
 				_getch();
 				break;
 			case 2:
-				std::cin >> list_1;
+				std::cin >> l;
 				break;
 			case 3:
 				int index;
-				std::cout << list_1;
-				std::cout << std::endl << "Select the concert you want to book a ticket for: ";
+				std::cout << l;
+				std::cout << std::endl << "Select the concert you want to book a ticket for ";
 				std::cin >> index;
 
-				if (index > list_1.get_concert_amount() || index <= 0)
-					throw "Invalid index";
+				if (index > l.get_concert_amount() || index <= 0)
+					throw std::exception("Error! Invalid index");
 				else
-					list_1.book_ticket(index - 1);
-
+					l.book_ticket(index - 1);
 				break;
 			case 4:
-				list_1.sort_by_date();
+				std::cout << "Amount of concerts in your list is " << l.get_concert_amount();
+				std::cout << std::endl << std::endl << "Press any key to return to the menu";
+				_getch();
 				break;
 			case 5:
-				list_1.sort_by_name();
+				l.sort_by_name();
 				break;
 			case 6:
+				l.sort_by_date();
+				break;
+			case 7:
+				std::cout << "The list was based on the file: 'shl.csv'";
+				_getch();
+				break;
+			case 8:
 				break;
 			default:
-				std::cout << "There is no such point of menu. Please, choose another one. Press any key to go back to menu";
+				std::cout << "There is no such point of menu. Press any key to return to the menu";
 				_getch();
 				break;
 			}
 
-			system("cls");
+			l.in_file("shl.csv");
 
-			list_1.in_file("lul.csv");
+			system("cls");
 		}
 	}
-	catch (const char* ex)
+	catch (const std::exception &ex)
 	{
-		std::cout << ex;
+		std::cout << ex.what() << std::endl;
+
+		_getch();
 		return 1;
 	}
-
-	system("pause");
+	
 	return 0;
-}
-
-void DisplayMenu(concerts_list list1)
-{
-	std::cout << "List is based on  shl.csv file (and include " << list1.get_concert_amount() << " concerts)" << std::endl;
-	std::cout << "1. Show the list" << std::endl;
-	std::cout << "2. Add new concert" << std::endl;
-	std::cout << "3. Book a ticket" << std::endl;
-	std::cout << "4. Sort by date" << std::endl;
-	std::cout << "5. Sort by name" << std::endl;
-	std::cout << "6. Exit" << std::endl;
 }
