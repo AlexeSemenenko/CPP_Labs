@@ -1,90 +1,48 @@
 #include "concerts.h"
 
-void menu();
 
 int main()
 {
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
 
-/*	auto choice = 0;
+	concerts_list l;
+	std::fstream file("shl.csv");
 
-	try
+	while(!file.eof())
 	{
-		while (choice != 8)
-		{
-			menu();
-			choice = _getch() - 48;
-			system("cls");
-			switch (choice)
-			{
-			case 1:
-				std::cout << l;
-				std::cout << std::endl << std::endl << "Press any key to return to the menu";
-				_getch();
-				break;
-			case 2:
-				std::cin >> l;
-				break;
-			case 3:
-				int index;
-				std::cout << l;
-				std::cout << std::endl << "Select the concert you want to book a ticket for ";
-				std::cin >> index;
-
-				if (index > l.get_concert_amount() || index <= 0)
-					throw std::exception("Error! Invalid index");
-				else
-					l.book_ticket(index - 1);
-				break;
-			case 4:
-				std::cout << "Amount of concerts in your list is " << l.get_concert_amount();
-				std::cout << std::endl << std::endl << "Press any key to return to the menu";
-				_getch();
-				break;
-			case 5:
-				l.sort_by_name();
-				break;
-			case 6:
-				l.sort_by_date();
-				break;
-			case 7:
-				std::cout << "The list was based on the file: 'shl.csv'";
-				_getch();
-				break;
-			case 8:
-				break;
-			default:
-				std::cout << "There is no such point of menu. Press any key to return to the menu";
-				_getch();
-				break;
-			}
-
-			system("cls");
-		}
-	}
-	catch (const std::exception &ex)
-	{
-		std::cout << ex.what() << std::endl;
-
-		_getch();
-		return 1;
+		file >> l;
 	}
 
-	*/
+	std::cout << "Your first list:" << std::endl << std::endl;
+	std::cout << l;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	std::cin >> l;
+	std::cout << "Your list after adding:" << std::endl << std::endl;
+	std::cout << l;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	l.sort_by_name();
+	std::cout << "Your list after sort by name:" << std::endl << std::endl;
+	std::cout << l;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	l.sort_by_date();
+	std::cout << "Your list after sort by date:" << std::endl << std::endl;
+	std::cout << l;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	file.clear();
+	file.seekg(0, std::ios::beg);
+	file << l;
+
+	file.close();
 
 	system("pause");
 	return 0;
-}
-
-void menu()
-{
-	std::cout << "1. Show your list" << std::endl;
-	std::cout << "2. Add new concert" << std::endl;
-	std::cout << "3. Book a ticket" << std::endl;
-	std::cout << "4. Amount of concerts" << std::endl;
-	std::cout << "5. Sort by name" << std::endl;
-	std::cout << "6. Sort by date" << std::endl;
-	std::cout << "7. Info" << std::endl;
-	std::cout << "8. Exit" << std::endl;
 }

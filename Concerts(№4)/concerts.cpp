@@ -2,12 +2,37 @@
 
 std::ostream& operator<<(std::ostream& out, const concerts_list& l1)
 {
-	
+	for (const auto& l : l1.list_)
+	{
+		out << l.name << ";" << l.capacity << ";" << l.left << ";" << std::put_time(&l.date, "%Y-%m-%d %H:%M") << std::endl;
+	}
 	return out;
 }
 
 std::istream& operator>>(std::istream& in, concerts_list& l1)
 {
+	std::string line;
+	std::getline(in, line);
+
+	auto pos = 0;
+	std::string subs[4];
+
+	for (auto i = 0; i < 3; i++)
+	{
+		pos = line.find(';');
+		subs[i] = line.substr(0, pos);
+		line.erase(0, pos + 1);
+	}
+	subs[3] = line;
+
+	concert c;
+	c.name = subs[0];
+	c.capacity = std::stol(subs[1]);
+	c.left = std::stol(subs[2]);
+	std::stringstream ss(subs[3]);
+	ss >> std::get_time(&c.date, "%Y-%m-%d %H:%M");
+
+	l1.list_.push_back(c);
 
 	return in;
 }
