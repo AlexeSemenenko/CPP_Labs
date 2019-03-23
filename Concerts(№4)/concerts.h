@@ -11,7 +11,7 @@
 #include <string>
 #include <ctime>
 
-#define MAX 50
+constexpr int MAX = 50;
 
 struct concert
 {
@@ -23,15 +23,16 @@ struct concert
 
 class concerts_list
 {
-	std::vector<concert> list_;
+	using vector_t = std::vector<concert>;
+	vector_t list_;
 public:
-
+	using iterator = vector_t::iterator;
 	concerts_list() = default;
 	concerts_list(concerts_list const&) = delete;
 	concerts_list(concerts_list&&) = delete;
 	int get_concert_amount() const;
 	concert& operator[](const int index);
-	void book_ticket(const int index);
+	bool book_ticket(const int index);
 	void sort_by_name();
 	void sort_by_date();
 	std::vector<concert>::iterator begin();

@@ -2,28 +2,29 @@
 
 std::ostream& operator<<(std::ostream& out, const concerts_list& l1)
 {
-	for (const auto& l : l1.list_)
+	for (auto const& l : l1.list_)
 	{
-		out << l.name << ";" << l.capacity << ";" << l.left << ";" << std::put_time(&l.date, "%Y-%m-%d %H:%M") << std::endl;
+		out << l.name << ";" << l.capacity << ";" << l.left << 
+			";" << std::put_time(&l.date, "%Y-%m-%d %H:%M") << std::endl;
 	}
 	return out;
 }
 
 std::istream& operator>>(std::istream& in, concerts_list& l1)
 {
-	std::string line;
-	std::getline(in, line);
+	std::string str;
+	std::getline(in, str);
 
 	auto pos = 0;
 	std::string subs[4];
 
 	for (auto i = 0; i < 3; i++)
 	{
-		pos = line.find(';');
-		subs[i] = line.substr(0, pos);
-		line.erase(0, pos + 1);
+		pos = str.find(';');
+		subs[i] = str.substr(0, pos);
+		str.erase(0, pos + 1);
 	}
-	subs[3] = line;
+	subs[3] = str;
 
 	concert c;
 	c.name = subs[0];
@@ -50,16 +51,14 @@ concert& concerts_list::operator[](const int index)
 	return list_[index];
 }
 
-void concerts_list::book_ticket(const int index)
+bool concerts_list::book_ticket(const int index)
 {
 	if (list_[index].left == 0)
 	{
-		throw std::length_error("No more concert tickets left for this concert");
+		return false;
 	}
-	else
-	{
-		list_[index].left--;
-	}
+	list_[index].left--;
+	return true;
 }
 
 std::vector<concert>::iterator concerts_list::begin()
