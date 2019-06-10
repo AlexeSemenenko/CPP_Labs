@@ -1,0 +1,5 @@
+4
+abs 333
+hello 32.12
+poka 321
+test 321
